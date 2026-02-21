@@ -35,17 +35,25 @@ def get_loaded_model(device="cuda", metadata=None):
     if model_type == "WhiStress":
         print("Inference WhiStress")
         whistress_model = WhiStress(
-            config=whisper_config, layer_for_head=layer_for_head, whisper_backbone_name=whisper_model_name
+            config=whisper_config, 
+            layer_for_head=layer_for_head, 
+            whisper_backbone_name=whisper_model_name
         ).to(device)
     elif model_type == "WhiStressPhn":
         print("Inference WhiStressPhn")
         whistress_model = WhiStressPhn(
-            config=whisper_config, layer_for_head=layer_for_head, whisper_backbone_name=whisper_model_name, num_phones=39, 
+            config=whisper_config, 
+            layer_for_head=layer_for_head, 
+            whisper_backbone_name=whisper_model_name,
+            num_phones=39, 
         ).to(device)
     elif model_type == "WhiStressPhnIa":
         print("Inference WhiStressPhnIa")
         whistress_model = WhiStressPhnIa(
-            config=whisper_config, layer_for_head=layer_for_head, whisper_backbone_name=whisper_model_name, num_phones=39, 
+            config=whisper_config, 
+            layer_for_head=layer_for_head, 
+            whisper_backbone_name=whisper_model_name,
+            num_phones=39, 
         ).to(device)
     else:
         raise ValueError(f"model_type {model_type} hasn't been implemented yet.")

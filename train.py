@@ -82,11 +82,6 @@ if __name__ == "__main__":
     }
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-    config = WhisperConfig.from_pretrained(whisper_tag)
-
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
     config = WhisperConfig.from_pretrained(whisper_tag)
 
     if model_type == "WhiStress":
@@ -95,16 +90,16 @@ if __name__ == "__main__":
                     layer_for_head=layer_for_head, 
                     whisper_backbone_name=whisper_tag,
                     loss_lambdas=loss_lambdas).to(device)
-    elif model_type == "WhiStressPhnIa":
-        print("Train WhiStressPhnIa")
-        model = WhiStressPhnIa(config=config, 
+    elif model_type == "WhiStressPhn":
+        print("Train WhiStressPhn")
+        model = WhiStressPhn(config=config, 
                     layer_for_head=layer_for_head, 
                     whisper_backbone_name=whisper_tag, 
                     num_phones=39,
                     loss_lambdas=loss_lambdas).to(device)
-    elif model_type == "WhiStressPhn":
-        print("Train WhiStressPhn")
-        model = WhiStressPhn(config=config, 
+    elif model_type == "WhiStressPhnIa":
+        print("Train WhiStressPhnIa")
+        model = WhiStressPhnIa(config=config, 
                     layer_for_head=layer_for_head, 
                     whisper_backbone_name=whisper_tag, 
                     num_phones=39,

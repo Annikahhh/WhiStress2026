@@ -400,6 +400,7 @@ class WhiStressPhn(PreTrainedModel):
         self.loss_fct = nn.CrossEntropyLoss(ignore_index=-100, weight=class_weights)
         self.phone_loss_fct = nn.CrossEntropyLoss(ignore_index=-100)
         self.layer_for_head = -1 if layer_for_head is None else layer_for_head
+        self.config = config
 
         if loss_lambdas:
             self.lambda_ssd = loss_lambdas["lambda_ssd"]
@@ -682,10 +683,10 @@ class WhiStressPhnIa(WhiStressPhn):
                         class_weights=class_weights, num_phones=num_phones, loss_lambdas=loss_lambdas)
 
         decoder_layer = nn.TransformerDecoderLayer(
-            d_model=config.d_model,
-            nhead=config.decoder_attention_heads,
-            dim_feedforward=config.decoder_ffn_dim,
-            dropout=config.dropout,
+            d_model=self.config.d_model,
+            nhead=self.config.decoder_attention_heads,
+            dim_feedforward=self.config.decoder_ffn_dim,
+            dropout=self.config.dropout,
             batch_first=True
         )
         self.ssd_wsd_ia_decoder = nn.TransformerDecoder(decoder_layer, num_layers=1)
