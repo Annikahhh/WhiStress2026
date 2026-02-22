@@ -136,6 +136,8 @@ class WhiStress(PreTrainedModel):
 
     def train(self, mode: Optional[bool] = True):
         # freeze whisper and train classifier
+        super().train(mode)
+        # freeze whisper and train task heads only
         self.whisper_model.eval()
         # mark whisper model requires grad false
         for param in self.whisper_model.parameters():
@@ -144,13 +146,16 @@ class WhiStress(PreTrainedModel):
             param.requires_grad = True
         for param in self.classifier.parameters():
             param.requires_grad = True
-        self.additional_decoder_block.train()
-        self.classifier.train()
+        self.additional_decoder_block.train(mode)
+        self.classifier.train(mode)
+        return self
 
     def eval(self):
+        super().eval()
         self.whisper_model.eval()
         self.additional_decoder_block.eval()
         self.classifier.eval()
+        return self
 
     def forward(
         self,
@@ -164,7 +169,7 @@ class WhiStress(PreTrainedModel):
         token_pos_ids=None,
         word_ids=None
     ):  
-        device = "cuda" if torch.cuda.is_available() else "cpu"
+        device = input_features.device
         self.whisper_model.eval()
          
         # pass the inputs through the model
@@ -412,7 +417,8 @@ class WhiStressPhn(PreTrainedModel):
             self.lambda_wsl = -1
 
     def train(self, mode: Optional[bool] = True):
-        # freeze whisper and train classifier
+        super().train(mode)
+        # freeze whisper and train task heads only
         self.whisper_model.eval()
         # mark whisper model requires grad false
         for param in self.whisper_model.parameters():
@@ -428,11 +434,12 @@ class WhiStressPhn(PreTrainedModel):
         for param in self.phone_stress_classifier.parameters():
             param.requires_grad = True
         
-        self.additional_decoder_block.train()
-        self.classifier.train()
-        self.phone_embed.train()
-        self.phone_decoder.train()
-        self.phone_stress_classifier.train()
+        self.additional_decoder_block.train(mode)
+        self.classifier.train(mode)
+        self.phone_embed.train(mode)
+        self.phone_decoder.train(mode)
+        self.phone_stress_classifier.train(mode)
+        return self
 
     def forward(
         self,
@@ -446,7 +453,10 @@ class WhiStressPhn(PreTrainedModel):
         token_pos_ids=None,
         word_ids=None
     ):  
-        device = "cuda" if torch.cuda.is_available() else "cpu"
+        if phone_ids is None:
+            raise ValueError("phone_ids is required for WhiStressPhn.forward")
+
+        device = input_features.device
         self.whisper_model.eval()
 
         # pass the inputs through the model

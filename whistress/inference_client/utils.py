@@ -24,7 +24,7 @@ def get_loaded_model(device="cuda", metadata=None):
     if metadata is None:
         whisper_model_name = f"openai/whisper-small.en"
         layer_for_head=9
-        model_type = "baseline"
+        model_type = "WhiStress"
     else:
         whisper_model_name = metadata["whisper_tag"]
         layer_for_head=metadata["layer_for_head"]

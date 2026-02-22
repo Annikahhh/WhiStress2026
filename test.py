@@ -37,7 +37,7 @@ if __name__ == "__main__":
     with open(pretrained_ckpt_dir / "metadata.json", "r") as fn:
         metadata = json.load(fn)
     
-    model = get_loaded_model(device="cuda", metadata=metadata)
+    model = get_loaded_model(device=device, metadata=metadata)
 
     dataset = load_dataset("slprl/TinyStress-15K")
     data_collate = MyCollate(processor=model.processor)
